@@ -41,10 +41,11 @@
                         <span class="menu-text">Keanggotaan</span>
                     </a>
                 </li>
-                <li class="menu-item">
-                    <div class="menu-link {{ request()->is('simpanan*') ? 'active' : '' }}">
+                <li class="menu-item {{ request()->is('simpanan*') ? 'open' : '' }}">
+                    <div class="menu-link {{ request()->is('simpanan*') ? 'active' : '' }}" onclick="toggleSubmenu(this)">
                         <span class="menu-icon"><i class="fas fa-wallet"></i></span>
                         <span class="menu-text">Simpanan</span>
+                        <span class="chevron-icon"><i class="fas fa-chevron-down"></i></span>
                     </div>
                     <ul class="submenu-list">
                         <li>
@@ -98,6 +99,14 @@
     </main>
 
     <script src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/js/all.min.js"></script>
+    <script>
+        function toggleSubmenu(element) {
+            event.preventDefault();
+            const menuItem = element.closest('.menu-item');
+            menuItem.classList.toggle('open');
+            console.log('Toggle clicked', menuItem.classList.contains('open'));
+        }
+    </script>
     @yield('scripts')
 </body>
 

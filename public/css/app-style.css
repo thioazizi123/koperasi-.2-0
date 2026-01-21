@@ -90,6 +90,26 @@ body {
     border-left: 1px solid var(--sidebar-hover);
     margin-top: 0.25rem;
     margin-bottom: 0.75rem;
+    display: none;
+    /* Hidden by default */
+}
+
+.menu-item.open .submenu-list {
+    display: block !important;
+}
+
+.chevron-icon {
+    margin-left: auto;
+    font-size: 0.8rem;
+    transition: transform 0.3s ease;
+}
+
+.menu-item.open .chevron-icon {
+    transform: rotate(180deg);
+}
+
+.menu-link {
+    cursor: pointer;
 }
 
 .submenu-link {
