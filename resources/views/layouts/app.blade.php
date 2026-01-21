@@ -35,7 +35,8 @@
                     </a>
                 </li>
                 <li class="menu-item">
-                    <a href="#" class="menu-link">
+                    <a href="{{ route('members.index') }}"
+                        class="menu-link {{ request()->routeIs('members.*') ? 'active' : '' }}">
                         <span class="menu-icon"><i class="fas fa-users"></i></span>
                         <span class="menu-text">Keanggotaan</span>
                     </a>
@@ -64,8 +65,9 @@
                     </ul>
                 </li>
                 <li class="menu-item">
-                    <a href="#" class="menu-link">
-                        <span class="menu-icon"><i class="fas fa-hand-holding-dollar"></i></span>
+                    <a href="{{ route('financings.index') }}"
+                        class="menu-link {{ request()->routeIs('financings.*') ? 'active' : '' }}">
+                        <span class="menu-icon"><i class="fas fa-hand-holding-usd"></i></span>
                         <span class="menu-text">Pembiayaan</span>
                     </a>
                 </li>
