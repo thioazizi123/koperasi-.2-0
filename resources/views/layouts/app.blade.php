@@ -42,10 +42,27 @@
                     </a>
                 </li>
                 <li class="menu-item">
-                    <a href="#" class="menu-link">
+                    <div class="menu-link {{ request()->is('simpanan*') ? 'active' : '' }}">
                         <span class="menu-icon"><i class="fas fa-wallet"></i></span>
                         <span class="menu-text">Simpanan</span>
-                    </a>
+                    </div>
+                    <ul class="submenu-list">
+                        <li>
+                            <a href="{{ route('simpanan.pokok') }}" class="submenu-link {{ request()->routeIs('simpanan.pokok') ? 'active' : '' }}">
+                                Simpanan Pokok
+                            </a>
+                        </li>
+                        <li>
+                            <a href="{{ route('simpanan.wajib') }}" class="submenu-link {{ request()->routeIs('simpanan.wajib') ? 'active' : '' }}">
+                                Simpanan Wajib
+                            </a>
+                        </li>
+                        <li>
+                            <a href="{{ route('simpanan.operasional') }}" class="submenu-link {{ request()->routeIs('simpanan.operasional') ? 'active' : '' }}">
+                                Dana Operasional
+                            </a>
+                        </li>
+                    </ul>
                 </li>
                 <li class="menu-item">
                     <a href="{{ route('financings.index') }}"
