@@ -55,7 +55,8 @@
                     </a>
                 </li>
                 <li class="menu-item">
-                    <a href="#" class="menu-link">
+                    <a href="{{ route('reports.index') }}"
+                        class="menu-link {{ request()->routeIs('reports.index') ? 'active' : '' }}">
                         <span class="menu-icon"><i class="fas fa-chart-line"></i></span>
                         <span class="menu-text">Report</span>
                     </a>
