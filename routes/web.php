@@ -1,6 +1,9 @@
 <?php
 
+<<<<<<< HEAD
 use Illuminate\Support\Facades\Route;
+=======
+>>>>>>> aa6fc50b99bd847fdf3abeadc7cf000b337fcdb3
 use App\Http\Controllers\MemberController;
 use App\Http\Controllers\FinancingController;
 use App\Http\Controllers\ReportController;
@@ -18,6 +21,10 @@ Route::get('/', function () {
 Route::resource('members', MemberController::class);
 Route::resource('financings', FinancingController::class);
 Route::put('/installments/{installment}/pay', [FinancingController::class, 'payInstallment'])->name('installments.pay');
+<<<<<<< HEAD
+=======
+
+>>>>>>> aa6fc50b99bd847fdf3abeadc7cf000b337fcdb3
 Route::get('/report', [ReportController::class, 'index'])->name('reports.index');
 
 Route::prefix('simpanan')->group(function () {
