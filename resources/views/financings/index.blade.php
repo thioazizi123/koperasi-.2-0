@@ -79,14 +79,7 @@
                                             <i class="fas fa-check"></i>
                                         </button>
                                     </form>
-                                    <form action="{{ route('financings.update', $financing->id) }}" method="POST" style="display:inline;">
-                                        @csrf
-                                        @method('PUT')
-                                        <input type="hidden" name="status" value="Ditolak">
-                                        <button type="submit" class="btn" style="background:none; border:none; color: #ef4444; cursor:pointer;" title="Tolak">
-                                            <i class="fas fa-times"></i>
-                                        </button>
-                                    </form>
+
                                 @endif
                                 <form action="{{ route('financings.destroy', $financing->id) }}" method="POST" onsubmit="return confirm('Hapus data ini?');" style="display:inline;">
                                     @csrf
@@ -101,7 +94,25 @@
                             <tr class="installment-row" data-financing-id="{{ $financing->id }}" style="display: none; background: #f8fafc;">
                                 <td colspan="8" style="padding: 0;">
                                     <div style="padding: 1.5rem; background: #f8fafc;">
-                                        <h4 style="font-size: 0.875rem; font-weight: 600; color: #475569; margin-bottom: 1rem;">Jadwal Angsuran</h4>
+                                        <div style="display: flex; justify-content: space-between; align-items: start; margin-bottom: 1.5rem;">
+                                            <div>
+                                                <h4 style="font-size: 1rem; font-weight: 700; color: #1e293b; margin-bottom: 0.5rem;">Angsuran</h4>
+                                                @php
+                                                    $totalCount = $financing->installments->count();
+                                                    $paidCount = $financing->installments->where('is_paid', true)->count();
+                                                    $remainingCount = $totalCount - $paidCount;
+                                                    $remainingAmount = $financing->installments->where('is_paid', false)->sum('amount');
+                                                @endphp
+                                                <div style="display: flex; gap: 1.5rem; font-size: 0.875rem; color: #64748b;">
+                                                    <div>Jumlah Angsuran: <span style="color: #1e293b; font-weight: 600;">{{ $paidCount }}/{{ $totalCount }} Bulan</span></div>
+                                                    <div>Sisa Angsuran: <span style="color: #1e293b; font-weight: 600;">{{ $remainingCount }} Bulan</span></div>
+                                                    <div>Sisa Tagihan: <span style="color: #e11d48; font-weight: 600;">Rp {{ number_format($remainingAmount, 0, ',', '.') }}</span></div>
+                                                </div>
+                                            </div>
+                                            <button onclick="printInstallments({{ $financing->id }})" class="btn" style="background: #f1f5f9; color: #475569; padding: 0.5rem 1rem; font-size: 0.875rem;">
+                                                <i class="fas fa-print"></i> Cetak Angsuran
+                                            </button>
+                                        </div>
                                         <table style="width: 100%; font-size: 0.875rem;">
                                             <thead>
                                                 <tr style="border-bottom: 1px solid #e2e8f0;">
@@ -177,5 +188,23 @@
             }
         });
     });
+
+    function printInstallments(id) {
+        const row = document.querySelector(`.installment-row[data-financing-id="${id}"]`);
+        const content = row.innerHTML;
+        const memberName = row.previousElementSibling.querySelector('td:nth-child(2)').innerText;
+        
+        const printWindow = window.open('', '_blank');
+        printWindow.document.write('<html><head><title>Angsuran - ' + memberName + '</title>');
+        printWindow.document.write('<style>body { font-family: sans-serif; padding: 40px; } table { width: 100%; border-collapse: collapse; margin-top: 20px; } th, td { border: 1px solid #ddd; padding: 12px; text-align: left; } th { background-color: #f8fafc; } h2 { margin-bottom: 5px; } .no-print { display: none; } button, form { display: none; }</style>');
+        printWindow.document.write('</head><body>');
+        printWindow.document.write('<h2>Angsuran Koperasi</h2>');
+        printWindow.document.write('<p>Anggota: <strong>' + memberName + '</strong></p>');
+        printWindow.document.write('<hr>');
+        printWindow.document.write(content);
+        printWindow.document.write('<script>window.print(); setTimeout(function() { window.close(); }, 500);<\/script>');
+        printWindow.document.write('</body></html>');
+        printWindow.document.close();
+    }
 </script>
 @endsection
