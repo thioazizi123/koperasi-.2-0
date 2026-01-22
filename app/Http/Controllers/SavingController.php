@@ -9,15 +9,15 @@ use App\Models\Saving;
 
 class SavingController extends Controller
 {
-    public function wajib()
+    public function wajib(Request $request)
     {
-        $year = 2025;
+        $year = $request->query('year', date('Y'));
         $type = 'wajib';
         $members = Member::with([
             'savings' => function ($q) use ($type) {
                 $q->where('type', $type);
             }
-        ])->get();
+        ])->orderBy('name')->get();
 
         foreach ($members as $member) {
             $member->saldo_awal = $member->savings->where('transaction_date', '<', "$year-01-01")->sum('amount');
@@ -38,8 +38,10 @@ class SavingController extends Controller
     {
         $validated = $request->validate([
             'member_id' => 'required|exists:members,id',
-            'amount' => 'required|numeric|min:0',
+            'amount' => 'required|numeric|min:20000',
             'transaction_date' => 'required|date',
+        ], [
+            'amount.min' => 'Minimal setoran simpanan wajib adalah Rp 20.000'
         ]);
 
         Saving::create([
@@ -99,15 +101,15 @@ class SavingController extends Controller
         return back()->with('success', 'Status simpanan pokok berhasil dikembalikan ke Belum Lunas.');
     }
 
-    public function operasional()
+    public function operasional(Request $request)
     {
-        $year = 2025;
+        $year = $request->query('year', date('Y'));
         $type = 'operasional';
         $members = Member::with([
             'savings' => function ($q) use ($type) {
                 $q->where('type', $type);
             }
-        ])->get();
+        ])->orderBy('name')->get();
 
         foreach ($members as $member) {
             $member->saldo_awal = $member->savings->where('transaction_date', '<', "$year-01-01")->sum('amount');
@@ -128,8 +130,10 @@ class SavingController extends Controller
     {
         $validated = $request->validate([
             'member_id' => 'required|exists:members,id',
-            'amount' => 'required|numeric|min:0',
+            'amount' => 'required|numeric|min:30000',
             'transaction_date' => 'required|date',
+        ], [
+            'amount.min' => 'Minimal setoran dana operasional adalah Rp 30.000'
         ]);
 
         Saving::create([
