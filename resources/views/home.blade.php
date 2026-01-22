@@ -34,6 +34,7 @@
             <table style="width: 100%; border-collapse: collapse;">
                 <thead>
                     <tr style="text-align: left; border-bottom: 2px solid #f1f5f9;">
+                        <th style="padding: 1rem 0;">Tanggal</th>
                         <th style="padding: 1rem 0;">Anggota</th>
                         <th style="padding: 1rem 0;">Tipe</th>
                         <th style="padding: 1rem 0;">Jumlah</th>
@@ -43,6 +44,7 @@
                 <tbody>
                     @forelse($latestTransactions as $transaction)
                         <tr style="border-bottom: 1px solid #f1f5f9;">
+                            <td style="padding: 1rem 0; color: #64748b; font-size: 0.875rem;">{{ $transaction->display_date }}</td>
                             <td style="padding: 1rem 0;">{{ $transaction->display_member }}</td>
                             <td style="padding: 1rem 0;">{{ $transaction->transaction_type }}</td>
                             <td style="padding: 1rem 0;">Rp {{ number_format($transaction->display_amount, 0, ',', '.') }}</td>
@@ -55,7 +57,7 @@
                         </tr>
                     @empty
                         <tr>
-                            <td colspan="4" style="padding: 2rem 0; text-align: center; color: #64748b;">
+                            <td colspan="5" style="padding: 2rem 0; text-align: center; color: #64748b;">
                                 <div style="display: flex; flex-direction: column; align-items: center; gap: 0.5rem;">
                                     <span style="font-size: 1.5rem;">📅</span>
                                     <p>Tidak ada transaksi dalam 7 hari terakhir.</p>

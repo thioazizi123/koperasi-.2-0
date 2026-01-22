@@ -24,10 +24,16 @@ Route::get('/', function () {
         ->latest()
         ->get()
         ->map(function ($item) {
-            $item->transaction_type = 'Simpanan';
+            $typeLabels = [
+                'pokok' => 'Simpanan Pokok',
+                'wajib' => 'Simpanan Wajib',
+                'operasional' => 'Dana Operasional',
+            ];
+            $item->transaction_type = $typeLabels[$item->type] ?? 'Simpanan';
             $item->display_amount = $item->amount;
             $item->display_member = $item->member->name ?? 'N/A';
             $item->display_status = 'Selesai';
+            $item->display_date = \Carbon\Carbon::parse($item->transaction_date)->format('d/m/Y');
             $item->status_color = '#dcfce7';
             $item->text_color = '#166534';
             $item->sort_date = $item->transaction_date;
@@ -43,6 +49,7 @@ Route::get('/', function () {
             $item->display_amount = $item->amount;
             $item->display_member = $item->member->name ?? 'N/A';
             $item->display_status = $item->status;
+            $item->display_date = \Carbon\Carbon::parse($item->date)->format('d/m/Y');
 
             $colors = [
                 'Pending' => ['bg' => '#fef9c3', 'text' => '#854d0e'],
