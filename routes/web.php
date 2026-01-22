@@ -13,7 +13,9 @@ Route::get('/', function () {
     $newMembers = '+' . $newMembersRaw;
 
     // Calculate real totals
-    $totalSavings = \App\Models\Saving::whereIn('type', ['pokok', 'wajib'])->sum('amount');
+    $totalPokok = \App\Models\Saving::where('type', 'pokok')->sum('amount');
+    $totalWajib = \App\Models\Saving::where('type', 'wajib')->sum('amount');
+    $totalOperasional = \App\Models\Saving::where('type', 'operasional')->sum('amount');
     $totalFinancing = \App\Models\Financing::where('status', 'Disetujui')->sum('amount');
 
     // Fetch latest transactions (7 days)
@@ -67,7 +69,7 @@ Route::get('/', function () {
 
     $latestTransactions = $latestSavings->concat($latestFinancings)->sortByDesc('sort_date');
 
-    return view('home', compact('totalMembers', 'newMembers', 'totalSavings', 'totalFinancing', 'latestTransactions'));
+    return view('home', compact('totalMembers', 'newMembers', 'totalPokok', 'totalWajib', 'totalOperasional', 'totalFinancing', 'latestTransactions'));
 });
 
 Route::resource('members', MemberController::class);
