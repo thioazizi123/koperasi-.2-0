@@ -29,4 +29,9 @@ class Member extends Model
     {
         return $this->hasMany(Financing::class);
     }
+
+    public function savings()
+    {
+        return $this->hasMany(Saving::class);
+    }
 }
