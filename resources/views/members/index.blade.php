@@ -172,6 +172,7 @@
         <table class="table">
             <thead>
                 <tr>
+                    <th>ID Anggota</th>
                     <th>Nama Lengkap</th>
                     <th>Umur</th>
                     <th>Jenis Kelamin</th>
@@ -184,6 +185,12 @@
             <tbody>
                 @foreach($members as $member)
                     <tr>
+                        <td>
+                            <span
+                                style="font-family: monospace; background: #f1f5f9; padding: 0.25rem 0.5rem; border-radius: 0.25rem; font-size: 0.875rem;">
+                                {{ $member->member_id ?? '-' }}
+                            </span>
+                        </td>
                         <td>
                             <div style="font-weight: 600; color: #1e293b;">{{ $member->name }}</div>
                         </td>

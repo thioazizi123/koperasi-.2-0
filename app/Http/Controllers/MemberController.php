@@ -24,9 +24,6 @@ class MemberController extends Controller
         //
     }
 
-    /**
-     * Store a newly created resource in storage.
-     */
     public function store(Request $request)
     {
         $validated = $request->validate([
@@ -37,6 +34,11 @@ class MemberController extends Controller
             'address' => 'required|string',
             'join_date' => 'required|date',
         ]);
+
+        // Auto-generate member_id
+        $lastMember = Member::latest('id')->first();
+        $nextId = $lastMember ? $lastMember->id + 1 : 1;
+        $validated['member_id'] = str_pad(100000 + $nextId, 6, '0', STR_PAD_LEFT);
 
         Member::create($validated);
 
