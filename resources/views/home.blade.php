@@ -15,11 +15,11 @@
             </div>
             <div class="stat-card">
                 <h3>Total Simpanan</h3>
-                <div class="value">Rp 150.000.000</div>
+                <div class="value">Rp {{ number_format($totalSavings, 0, ',', '.') }}</div>
             </div>
             <div class="stat-card">
                 <h3>Total Pembiayaan</h3>
-                <div class="value">Rp 85.500.000</div>
+                <div class="value">Rp {{ number_format($totalFinancing, 0, ',', '.') }}</div>
             </div>
             <div class="stat-card">
                 <h3>Pendaftar Baru <small style="font-size: 0.7em; font-weight: normal;">(7 Hari)</small></h3>
@@ -41,30 +41,28 @@
                     </tr>
                 </thead>
                 <tbody>
-                    <tr style="border-bottom: 1px solid #f1f5f9;">
-                        <td style="padding: 1rem 0;">Ahmad Fauzi</td>
-                        <td style="padding: 1rem 0;">Simpanan</td>
-                        <td style="padding: 1rem 0;">Rp 500.000</td>
-                        <td style="padding: 1rem 0;"><span
-                                style="background: #dcfce7; color: #166534; padding: 0.25rem 0.75rem; border-radius: 1rem; font-size: 0.875rem;">Selesai</span>
-                        </td>
-                    </tr>
-                    <tr style="border-bottom: 1px solid #f1f5f9;">
-                        <td style="padding: 1rem 0;">Siti Aminah</td>
-                        <td style="padding: 1rem 0;">Pembiayaan</td>
-                        <td style="padding: 1rem 0;">Rp 5.000.000</td>
-                        <td style="padding: 1rem 0;"><span
-                                style="background: #fef9c3; color: #854d0e; padding: 0.25rem 0.75rem; border-radius: 1rem; font-size: 0.875rem;">Pending</span>
-                        </td>
-                    </tr>
-                    <tr>
-                        <td style="padding: 1rem 0;">Budi Santoso</td>
-                        <td style="padding: 1rem 0;">Simpanan</td>
-                        <td style="padding: 1rem 0;">Rp 250.000</td>
-                        <td style="padding: 1rem 0;"><span
-                                style="background: #dcfce7; color: #166534; padding: 0.25rem 0.75rem; border-radius: 1rem; font-size: 0.875rem;">Selesai</span>
-                        </td>
-                    </tr>
+                    @forelse($latestTransactions as $transaction)
+                        <tr style="border-bottom: 1px solid #f1f5f9;">
+                            <td style="padding: 1rem 0;">{{ $transaction->display_member }}</td>
+                            <td style="padding: 1rem 0;">{{ $transaction->transaction_type }}</td>
+                            <td style="padding: 1rem 0;">Rp {{ number_format($transaction->display_amount, 0, ',', '.') }}</td>
+                            <td style="padding: 1rem 0;">
+                                <span
+                                    style="background: {{ $transaction->status_color }}; color: {{ $transaction->text_color }}; padding: 0.25rem 0.75rem; border-radius: 1rem; font-size: 0.875rem;">
+                                    {{ $transaction->display_status }}
+                                </span>
+                            </td>
+                        </tr>
+                    @empty
+                        <tr>
+                            <td colspan="4" style="padding: 2rem 0; text-align: center; color: #64748b;">
+                                <div style="display: flex; flex-direction: column; align-items: center; gap: 0.5rem;">
+                                    <span style="font-size: 1.5rem;">📅</span>
+                                    <p>Tidak ada transaksi dalam 7 hari terakhir.</p>
+                                </div>
+                            </td>
+                        </tr>
+                    @endforelse
                 </tbody>
             </table>
         </div>

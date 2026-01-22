@@ -15,9 +15,8 @@
 
             <div class="form-group" style="position: relative;">
                 <label class="form-label"
-                    style="display: block; margin-bottom: 0.5rem; font-weight: 500; color: #334155;">ID Anggota /
-                    Nama</label>
-                <input type="text" id="memberSearch" placeholder="Ketik ID atau Nama..." autocomplete="off" required
+                    style="display: block; margin-bottom: 0.5rem; font-weight: 500; color: #334155;">Pilih Anggota</label>
+                <input type="text" id="memberSearch" placeholder="Ketik Nama Anggota..." autocomplete="off" required
                     style="width: 100%; padding: 0.75rem; border: 1px solid #cbd5e1; border-radius: 0.5rem; font-family: inherit; font-size: 1rem;">
                 <input type="hidden" name="member_id" id="selectedMemberId" required>
 
@@ -27,7 +26,7 @@
                 </div>
 
                 <small style="color: #64748b; font-size: 0.875rem; display: block; margin-top: 0.5rem;">
-                    Contoh: 100001 atau Ahmad
+                    Contoh: Ahmad Fauzi
                 </small>
             </div>
 
@@ -87,7 +86,7 @@
         const memberSearch = document.getElementById('memberSearch');
         const selectedMemberId = document.getElementById('selectedMemberId');
         const memberDropdown = document.getElementById('memberDropdown');
-        const members = @json($members->map(fn($m) => ['id' => $m->id, 'member_id' => $m->member_id, 'name' => $m->name]));
+        const members = @json($members->map(fn($m) => ['id' => $m->id, 'name' => $m->name]));
 
         // Show dropdown with filtered results
         memberSearch.addEventListener('input', function () {
@@ -102,12 +101,11 @@
                 return;
             }
 
-            // Filter members by ID only
-        const filtered = members.filter(m => {
-            const searchLower = searchValue.toLowerCase();
-            return (m.member_id && m.member_id.includes(searchValue)) || 
-                   (m.name && m.name.toLowerCase().includes(searchLower));
-        });
+            // Filter members by Name
+            const filtered = members.filter(m => {
+                const searchLower = searchValue.toLowerCase();
+                return m.name && m.name.toLowerCase().includes(searchLower);
+            });
 
             if (filtered.length === 0) {
                 memberDropdown.style.display = 'none';
@@ -117,10 +115,9 @@
             // Build dropdown HTML
             let html = '';
             filtered.forEach(member => {
-                html += `<div class="dropdown-item" data-id="${member.id}" data-member-id="${member.member_id}" style="padding: 0.75rem 1rem; cursor: pointer; border-bottom: 1px solid #f1f5f9; font-family: monospace;">
-                        <div style="font-weight: 600; color: #1e293b;">${member.member_id}</div>
-                        <div style="font-size: 0.875rem; color: #64748b;">${member.name}</div>
-                    </div>`;
+                html += `<div class="dropdown-item" data-id="${member.id}" data-name="${member.name}" style="padding: 0.75rem 1rem; cursor: pointer; border-bottom: 1px solid #f1f5f9;">
+                            <div style="font-weight: 600; color: #1e293b;">${member.name}</div>
+                        </div>`;
             });
 
             memberDropdown.innerHTML = html;
@@ -130,9 +127,9 @@
             document.querySelectorAll('.dropdown-item').forEach(item => {
                 item.addEventListener('click', function () {
                     const memberId = this.dataset.id;
-                    const memberIdText = this.dataset.memberId;
+                    const memberName = this.dataset.name;
 
-                    memberSearch.value = memberIdText;
+                    memberSearch.value = memberName;
                     selectedMemberId.value = memberId;
                     memberDropdown.style.display = 'none';
                 });

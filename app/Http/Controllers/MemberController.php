@@ -35,11 +35,6 @@ class MemberController extends Controller
             'join_date' => 'required|date',
         ]);
 
-        // Auto-generate member_id
-        $lastMember = Member::latest('id')->first();
-        $nextId = $lastMember ? $lastMember->id + 1 : 1;
-        $validated['member_id'] = str_pad(100000 + $nextId, 6, '0', STR_PAD_LEFT);
-
         Member::create($validated);
 
         return redirect()->route('members.index')->with('success', 'Anggota berhasil ditambahkan.');

@@ -11,8 +11,56 @@ Route::get('/', function () {
     $totalMembers = Member::count();
     $newMembersRaw = Member::whereDate('join_date', '>=', now()->subDays(7))->count();
     $newMembers = '+' . $newMembersRaw;
-    $latestMembers = Member::latest()->take(5)->get();
-    return view('home', compact('totalMembers', 'newMembers', 'latestMembers'));
+
+    // Calculate real totals
+    $totalSavings = \App\Models\Saving::whereIn('type', ['pokok', 'wajib'])->sum('amount');
+    $totalFinancing = \App\Models\Financing::where('status', 'Disetujui')->sum('amount');
+
+    // Fetch latest transactions (7 days)
+    $sevenDaysAgo = now()->subDays(7);
+
+    $latestSavings = \App\Models\Saving::with('member')
+        ->where('transaction_date', '>=', $sevenDaysAgo)
+        ->latest()
+        ->get()
+        ->map(function ($item) {
+            $item->transaction_type = 'Simpanan';
+            $item->display_amount = $item->amount;
+            $item->display_member = $item->member->name ?? 'N/A';
+            $item->display_status = 'Selesai';
+            $item->status_color = '#dcfce7';
+            $item->text_color = '#166534';
+            $item->sort_date = $item->transaction_date;
+            return $item;
+        });
+
+    $latestFinancings = \App\Models\Financing::with('member')
+        ->where('date', '>=', $sevenDaysAgo)
+        ->latest()
+        ->get()
+        ->map(function ($item) {
+            $item->transaction_type = 'Pembiayaan';
+            $item->display_amount = $item->amount;
+            $item->display_member = $item->member->name ?? 'N/A';
+            $item->display_status = $item->status;
+
+            $colors = [
+                'Pending' => ['bg' => '#fef9c3', 'text' => '#854d0e'],
+                'Disetujui' => ['bg' => '#dcfce7', 'text' => '#166534'],
+                'Ditolak' => ['bg' => '#fee2e2', 'text' => '#991b1b'],
+                'Lunas' => ['bg' => '#dcfce7', 'text' => '#166534'],
+            ];
+
+            $statusColors = $colors[$item->status] ?? ['bg' => '#f1f5f9', 'text' => '#475569'];
+            $item->status_color = $statusColors['bg'];
+            $item->text_color = $statusColors['text'];
+            $item->sort_date = $item->date;
+            return $item;
+        });
+
+    $latestTransactions = $latestSavings->concat($latestFinancings)->sortByDesc('sort_date');
+
+    return view('home', compact('totalMembers', 'newMembers', 'totalSavings', 'totalFinancing', 'latestTransactions'));
 });
 
 Route::resource('members', MemberController::class);
