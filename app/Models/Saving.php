@@ -13,6 +13,10 @@ class Saving extends Model
         'transaction_date',
     ];
 
+    protected $casts = [
+        'transaction_date' => 'date',
+    ];
+
     public function member()
     {
         return $this->belongsTo(Member::class);

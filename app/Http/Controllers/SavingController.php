@@ -11,14 +11,54 @@ class SavingController extends Controller
 {
     public function wajib()
     {
-        return view('simpanan.wajib');
+        $year = 2025;
+        $type = 'wajib';
+        $members = Member::with([
+            'savings' => function ($q) use ($type) {
+                $q->where('type', $type);
+            }
+        ])->get();
+
+        foreach ($members as $member) {
+            $member->saldo_awal = $member->savings->where('transaction_date', '<', "$year-01-01")->sum('amount');
+            $monthly = [];
+            for ($m = 1; $m <= 12; $m++) {
+                $monthly[$m] = $member->savings->filter(function ($s) use ($year, $m) {
+                    return $s->transaction_date->year == $year && $s->transaction_date->month == $m;
+                })->sum('amount');
+            }
+            $member->monthly_savings = $monthly;
+            $member->total_year = $member->saldo_awal + array_sum($monthly);
+        }
+
+        return view('simpanan.wajib', compact('members', 'year'));
+    }
+
+    public function storeWajib(Request $request)
+    {
+        $validated = $request->validate([
+            'member_id' => 'required|exists:members,id',
+            'amount' => 'required|numeric|min:0',
+            'transaction_date' => 'required|date',
+        ]);
+
+        Saving::create([
+            'member_id' => $validated['member_id'],
+            'type' => 'wajib',
+            'amount' => $validated['amount'],
+            'transaction_date' => $validated['transaction_date'],
+        ]);
+
+        return back()->with('success', 'Setoran simpanan wajib berhasil ditambahkan.');
     }
 
     public function pokok()
     {
-        $members = Member::with(['savings' => function($query) {
-            $query->where('type', 'pokok');
-        }])->get();
+        $members = Member::with([
+            'savings' => function ($query) {
+                $query->where('type', 'pokok');
+            }
+        ])->get();
 
         $totalPaid = Saving::where('type', 'pokok')->sum('amount');
 
@@ -61,6 +101,44 @@ class SavingController extends Controller
 
     public function operasional()
     {
-        return view('simpanan.operasional');
+        $year = 2025;
+        $type = 'operasional';
+        $members = Member::with([
+            'savings' => function ($q) use ($type) {
+                $q->where('type', $type);
+            }
+        ])->get();
+
+        foreach ($members as $member) {
+            $member->saldo_awal = $member->savings->where('transaction_date', '<', "$year-01-01")->sum('amount');
+            $monthly = [];
+            for ($m = 1; $m <= 12; $m++) {
+                $monthly[$m] = $member->savings->filter(function ($s) use ($year, $m) {
+                    return $s->transaction_date->year == $year && $s->transaction_date->month == $m;
+                })->sum('amount');
+            }
+            $member->monthly_savings = $monthly;
+            $member->total_year = $member->saldo_awal + array_sum($monthly);
+        }
+
+        return view('simpanan.operasional', compact('members', 'year'));
+    }
+
+    public function storeOperasional(Request $request)
+    {
+        $validated = $request->validate([
+            'member_id' => 'required|exists:members,id',
+            'amount' => 'required|numeric|min:0',
+            'transaction_date' => 'required|date',
+        ]);
+
+        Saving::create([
+            'member_id' => $validated['member_id'],
+            'type' => 'operasional',
+            'amount' => $validated['amount'],
+            'transaction_date' => $validated['transaction_date'],
+        ]);
+
+        return back()->with('success', 'Dana operasional berhasil ditambahkan.');
     }
 }

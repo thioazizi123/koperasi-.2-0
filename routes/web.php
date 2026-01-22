@@ -23,8 +23,10 @@ Route::get('/report', [ReportController::class, 'index'])->name('reports.index')
 
 Route::prefix('simpanan')->group(function () {
     Route::get('/wajib', [SavingController::class, 'wajib'])->name('simpanan.wajib');
+    Route::post('/wajib', [SavingController::class, 'storeWajib'])->name('simpanan.wajib.store');
     Route::get('/pokok', [SavingController::class, 'pokok'])->name('simpanan.pokok');
     Route::post('/pokok', [SavingController::class, 'storePokok'])->name('simpanan.pokok.store');
     Route::delete('/pokok/{member}', [SavingController::class, 'destroyPokok'])->name('simpanan.pokok.destroy');
     Route::get('/operasional', [SavingController::class, 'operasional'])->name('simpanan.operasional');
+    Route::post('/operasional', [SavingController::class, 'storeOperasional'])->name('simpanan.operasional.store');
 });
