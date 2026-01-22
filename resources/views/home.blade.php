@@ -13,9 +13,17 @@
                 <h3>Total Anggota</h3>
                 <div class="value">{{ number_format($totalMembers) }}</div>
             </div>
-            <div class="stat-card">
-                <h3>Total Simpanan</h3>
-                <div class="value">Rp {{ number_format($totalSavings, 0, ',', '.') }}</div>
+            <div class="stat-card" style="border-left-color: #10b981;">
+                <h3>Total Simpanan Pokok</h3>
+                <div class="value">Rp {{ number_format($totalPokok, 0, ',', '.') }}</div>
+            </div>
+            <div class="stat-card" style="border-left-color: #3b82f6;">
+                <h3>Total Simpanan Wajib</h3>
+                <div class="value">Rp {{ number_format($totalWajib, 0, ',', '.') }}</div>
+            </div>
+            <div class="stat-card" style="border-left-color: #f59e0b;">
+                <h3>Total Dana Operasional</h3>
+                <div class="value">Rp {{ number_format($totalOperasional, 0, ',', '.') }}</div>
             </div>
             <div class="stat-card">
                 <h3>Total Pembiayaan</h3>

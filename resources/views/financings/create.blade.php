@@ -33,19 +33,14 @@
             <div class="form-group" style="margin-top: 1.5rem;">
                 <label class="form-label"
                     style="display: block; margin-bottom: 0.5rem; font-weight: 500; color: #334155;">Tipe Pembiayaan</label>
-                <select name="type" class="form-control" required
+                <input type="text" name="type" class="form-control" placeholder="Ketik Tipe Pembiayaan..." required
                     style="width: 100%; padding: 0.75rem; border: 1px solid #cbd5e1; border-radius: 0.5rem;">
-                    <option value="Modal Usaha">Modal Usaha</option>
-                    <option value="Renovasi Rumah">Renovasi Rumah</option>
-                    <option value="Pendidikan">Pendidikan</option>
-                    <option value="Multiguna">Multiguna</option>
-                </select>
             </div>
 
             <div class="form-group" style="margin-top: 1.5rem; display: grid; grid-template-columns: 1fr 1fr; gap: 1.5rem;">
                 <div>
                     <label class="form-label"
-                        style="display: block; margin-bottom: 0.5rem; font-weight: 500; color: #334155;">Jumlah Pengajuan
+                        style="display: block; margin-bottom: 0.5rem; font-weight: 500; color: #334155;">Jumlah Pembiayaan
                         (Rp)</label>
                     <input type="text" name="amount" class="form-control" required pattern="[0-9]+" inputmode="numeric"
                         style="width: 100%; padding: 0.75rem; border: 1px solid #cbd5e1; border-radius: 0.5rem;">
@@ -116,8 +111,8 @@
             let html = '';
             filtered.forEach(member => {
                 html += `<div class="dropdown-item" data-id="${member.id}" data-name="${member.name}" style="padding: 0.75rem 1rem; cursor: pointer; border-bottom: 1px solid #f1f5f9;">
-                            <div style="font-weight: 600; color: #1e293b;">${member.name}</div>
-                        </div>`;
+                                <div style="font-weight: 600; color: #1e293b;">${member.name}</div>
+                            </div>`;
             });
 
             memberDropdown.innerHTML = html;
