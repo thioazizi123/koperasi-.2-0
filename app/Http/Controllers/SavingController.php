@@ -145,4 +145,43 @@ class SavingController extends Controller
 
         return back()->with('success', 'Dana operasional berhasil ditambahkan.');
     }
+
+    public function penarikan()
+    {
+        $members = Member::orderBy('name')->get();
+        $withdrawals = Saving::with('member')
+            ->where('amount', '<', 0)
+            ->latest()
+            ->get();
+
+        return view('simpanan.penarikan', compact('members', 'withdrawals'));
+    }
+
+    public function storePenarikan(Request $request)
+    {
+        $validated = $request->validate([
+            'member_id' => 'required|exists:members,id',
+            'type' => 'required|in:pokok,wajib,operasional',
+            'amount' => 'required|numeric|min:1',
+            'transaction_date' => 'required|date',
+        ]);
+
+        // Check current balance for the member and type
+        $currentBalance = Saving::where('member_id', $validated['member_id'])
+            ->where('type', $validated['type'])
+            ->sum('amount');
+
+        if ($currentBalance < $validated['amount']) {
+            return back()->with('error', 'Saldo tidak mencukupi untuk melakukan penarikan. Saldo saat ini: Rp ' . number_format($currentBalance, 0, ',', '.'));
+        }
+
+        Saving::create([
+            'member_id' => $validated['member_id'],
+            'type' => $validated['type'],
+            'amount' => -$validated['amount'], // Store as negative
+            'transaction_date' => $validated['transaction_date'],
+        ]);
+
+        return back()->with('success', 'Penarikan simpanan berhasil diproses.');
+    }
 }

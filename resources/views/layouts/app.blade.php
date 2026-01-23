@@ -63,6 +63,11 @@
                                 Dana Operasional
                             </a>
                         </li>
+                        <li>
+                            <a href="{{ route('simpanan.penarikan') }}" class="submenu-link {{ request()->routeIs('simpanan.penarikan') ? 'active' : '' }}">
+                                Penarikan
+                            </a>
+                        </li>
                     </ul>
                 </li>
                 <li class="menu-item">

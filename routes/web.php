@@ -86,4 +86,6 @@ Route::prefix('simpanan')->group(function () {
     Route::delete('/pokok/{member}', [SavingController::class, 'destroyPokok'])->name('simpanan.pokok.destroy');
     Route::get('/operasional', [SavingController::class, 'operasional'])->name('simpanan.operasional');
     Route::post('/operasional', [SavingController::class, 'storeOperasional'])->name('simpanan.operasional.store');
+    Route::get('/penarikan', [SavingController::class, 'penarikan'])->name('simpanan.penarikan');
+    Route::post('/penarikan', [SavingController::class, 'storePenarikan'])->name('simpanan.penarikan.store');
 });
