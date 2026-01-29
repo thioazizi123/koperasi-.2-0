@@ -81,7 +81,7 @@
         const memberSearch = document.getElementById('memberSearch');
         const selectedMemberId = document.getElementById('selectedMemberId');
         const memberDropdown = document.getElementById('memberDropdown');
-        const members = @json($members->map(fn($m) => ['id' => $m->id, 'name' => $m->name]));
+        const members = @json($members->map(fn($m) => ['id' => $m->id, 'name' => $m->name, 'member_no' => $m->member_no]));
 
         // Show dropdown with filtered results
         memberSearch.addEventListener('input', function () {
@@ -96,10 +96,11 @@
                 return;
             }
 
-            // Filter members by Name
+            // Filter members by Name or Member No
             const filtered = members.filter(m => {
                 const searchLower = searchValue.toLowerCase();
-                return m.name && m.name.toLowerCase().includes(searchLower);
+                return (m.name && m.name.toLowerCase().includes(searchLower)) ||
+                    (m.member_no && m.member_no.toLowerCase().includes(searchLower));
             });
 
             if (filtered.length === 0) {
@@ -110,9 +111,11 @@
             // Build dropdown HTML
             let html = '';
             filtered.forEach(member => {
-                html += `<div class="dropdown-item" data-id="${member.id}" data-name="${member.name}" style="padding: 0.75rem 1rem; cursor: pointer; border-bottom: 1px solid #f1f5f9;">
-                                <div style="font-weight: 600; color: #1e293b;">${member.name}</div>
-                            </div>`;
+                const displayText = `${member.name} - ${member.member_no}`;
+                html += `<div class="dropdown-item" data-id="${member.id}" data-name="${displayText}" style="padding: 0.75rem 1rem; cursor: pointer; border-bottom: 1px solid #f1f5f9;">
+                                    <div style="font-weight: 600; color: #1e293b;">${member.name}</div>
+                                    <div style="font-size: 0.875rem; color: #64748b;">ID: ${member.member_no}</div>
+                                </div>`;
             });
 
             memberDropdown.innerHTML = html;

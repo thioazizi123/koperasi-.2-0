@@ -33,7 +33,7 @@ Route::get('/', function () {
             ];
             $item->transaction_type = $typeLabels[$item->type] ?? 'Simpanan';
             $item->display_amount = $item->amount;
-            $item->display_member = $item->member->name ?? 'N/A';
+            $item->display_member = $item->member ? ($item->member->name . ' - ' . $item->member->member_no) : 'N/A';
             $item->display_status = 'Selesai';
             $item->display_date = \Carbon\Carbon::parse($item->transaction_date)->format('d/m/Y');
             $item->status_color = '#dcfce7';
@@ -49,7 +49,7 @@ Route::get('/', function () {
         ->map(function ($item) {
             $item->transaction_type = 'Pembiayaan';
             $item->display_amount = $item->amount;
-            $item->display_member = $item->member->name ?? 'N/A';
+            $item->display_member = $item->member ? ($item->member->name . ' - ' . $item->member->member_no) : 'N/A';
             $item->display_status = $item->status;
             $item->display_date = \Carbon\Carbon::parse($item->date)->format('d/m/Y');
 

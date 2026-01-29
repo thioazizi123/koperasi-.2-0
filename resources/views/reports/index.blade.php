@@ -71,6 +71,8 @@
                 <tr style="background:#e2e8f0;">
                     <th rowspan="2" style="border:1px solid #94a3b8; padding:0.5rem; vertical-align: middle;">NO</th>
                     <th rowspan="2"
+                        style="border:1px solid #94a3b8; padding:0.5rem; min-width:100px; vertical-align: middle;">ID</th>
+                    <th rowspan="2"
                         style="border:1px solid #94a3b8; padding:0.5rem; min-width:150px; vertical-align: middle;">Nama</th>
                     <th rowspan="2" style="border:1px solid #94a3b8; padding:0.5rem; vertical-align: middle;">
                         Simpanan<br>Pokok</th>
@@ -93,6 +95,7 @@
                 @forelse($matrix as $idx => $row)
                     <tr>
                         <td style="border:1px solid #cbd5e1; padding:0.5rem;">{{ $idx + 1 }}</td>
+                        <td style="border:1px solid #cbd5e1; padding:0.5rem; font-family: monospace;">{{ $row['member_no'] ?? '-' }}</td>
                         <td style="border:1px solid #cbd5e1; padding:0.5rem; text-align:left;">{{ $row['name'] }}</td>
                         <td style="border:1px solid #cbd5e1; padding:0.5rem; text-align:right;">
                             {{ number_format($row['pokok'], 0, ',', '.') }}</td>
@@ -110,7 +113,7 @@
                     </tr>
                 @empty
                     <tr>
-                        <td colspan="{{ 4 + ($years->count() * 3) }}"
+                        <td colspan="{{ 5 + ($years->count() * 3) }}"
                             style="padding: 2rem; border: 1px solid #cbd5e1; color: #64748b;">Belum ada data anggota.</td>
                     </tr>
                 @endforelse

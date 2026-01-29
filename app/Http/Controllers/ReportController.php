@@ -17,7 +17,7 @@ class ReportController extends Controller
                 'date' => $s->transaction_date,
                 'description' => ($s->amount > 0 ? 'Setoran ' : 'Penarikan ') .
                     ($s->type == 'pokok' ? 'Simpanan Pokok' : ($s->type == 'wajib' ? 'Simpanan Wajib' : 'Dana Operasional')) .
-                    ' - ' . ($s->member->name ?? 'N/A'),
+                    ' - ' . ($s->member ? ($s->member->name . ' (' . $s->member->member_no . ')') : 'N/A'),
                 'in' => $s->amount > 0 ? $s->amount : 0,
                 'out' => $s->amount < 0 ? abs($s->amount) : 0,
             ];
@@ -28,7 +28,7 @@ class ReportController extends Controller
         $financings = \App\Models\Financing::with('member')->where('status', 'Disetujui')->get()->map(function ($f) {
             return [
                 'date' => $f->date,
-                'description' => 'Pencairan Pembiayaan (' . $f->type . ') - ' . ($f->member->name ?? 'N/A'),
+                'description' => 'Pencairan Pembiayaan (' . $f->type . ') - ' . ($f->member ? ($f->member->name . ' (' . $f->member->member_no . ')') : 'N/A'),
                 'in' => 0,
                 'out' => $f->amount,
             ];
@@ -39,7 +39,7 @@ class ReportController extends Controller
         $installments = \App\Models\Installment::with('financing.member')->where('is_paid', true)->get()->map(function ($i) {
             return [
                 'date' => $i->paid_date,
-                'description' => 'Angsuran ke-' . $i->installment_number . ' (' . ($i->financing->type ?? 'N/A') . ') - ' . ($i->financing->member->name ?? 'N/A'),
+                'description' => 'Angsuran ke-' . $i->installment_number . ' (' . ($i->financing->type ?? 'N/A') . ') - ' . ($i->financing->member ? ($i->financing->member->name . ' (' . $i->financing->member->member_no . ')') : 'N/A'),
                 'in' => $i->amount,
                 'out' => 0,
             ];
@@ -75,6 +75,7 @@ class ReportController extends Controller
         foreach ($members as $member) {
             $row = [
                 'name' => $member->name,
+                'member_no' => $member->member_no, // ADDED member_no
                 'pokok' => $member->savings->where('type', 'pokok')->sum('amount'), // Pokok is lifetime
                 'years' => [],
                 'total_all' => 0
