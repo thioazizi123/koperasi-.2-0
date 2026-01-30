@@ -26,6 +26,7 @@
                 <thead>
                     <tr style="background: #f8fafc; text-align: left;">
                         <th style="padding: 1rem 1.5rem; font-weight: 600; color: #475569; width: 30px;"></th>
+                        <th style="padding: 1rem 1.5rem; font-weight: 600; color: #475569;">ID</th>
                         <th style="padding: 1rem 1.5rem; font-weight: 600; color: #475569;">Anggota</th>
                         <th style="padding: 1rem 1.5rem; font-weight: 600; color: #475569;">Tipe</th>
                         <th style="padding: 1rem 1.5rem; font-weight: 600; color: #475569;">Jumlah</th>
@@ -42,6 +43,9 @@
                                 @if($financing->status === 'Disetujui' && $financing->installments->isNotEmpty())
                                     <i class="fas fa-chevron-right expand-icon" style="cursor: pointer; color: #64748b; transition: transform 0.2s;"></i>
                                 @endif
+                            </td>
+                            <td style="padding: 1rem 1.5rem; font-family: monospace; font-weight: 600; color: #64748b;">
+                                {{ $financing->member->member_no ?? '-' }}
                             </td>
                             <td style="padding: 1rem 1.5rem; font-weight: 500;">
                                 {{ $financing->member->name ?? 'Deleted Member' }}

@@ -35,7 +35,7 @@
                 <input list="member_list" name="member_name" id="member_input" placeholder="Ketik nama anggota..." required style="width: 100%; padding: 0.75rem; border: 1px solid #e2e8f0; border-radius: 0.5rem; outline: none;">
                 <datalist id="member_list">
                     @foreach($members as $member)
-                        <option value="{{ $member->name }}" data-id="{{ $member->id }}">
+                        <option value="{{ $member->name }} - {{ $member->member_no }}" data-id="{{ $member->id }}">
                     @endforeach
                 </datalist>
                 <input type="hidden" name="member_id" id="member_id_hidden">
@@ -72,6 +72,7 @@
             <thead>
                 <tr style="text-align: center; border-bottom: 2px solid #f1f5f9; background: #f8fafc;">
                     <th style="padding: 0.75rem; border: 1px solid #e2e8f0;">No</th>
+                    <th style="padding: 0.75rem; border: 1px solid #e2e8f0; text-align: left;">ID</th>
                     <th style="padding: 0.75rem; border: 1px solid #e2e8f0; text-align: left;">Nama</th>
                     <th style="padding: 0.75rem; border: 1px solid #e2e8f0;">Saldo {{ $year - 1 }}</th>
                     <th style="padding: 0.75rem; border: 1px solid #e2e8f0;">Jan</th>
@@ -93,6 +94,9 @@
                 @foreach($members as $index => $member)
                     <tr style="border-bottom: 1px solid #f1f5f9;">
                         <td style="padding: 0.75rem; border: 1px solid #e2e8f0; text-align: center;">{{ $index + 1 }}</td>
+                        <td style="padding: 0.75rem; border: 1px solid #e2e8f0; font-family: monospace;">
+                            {{ $member->member_no ?? '-' }}
+                        </td>
                         <td style="padding: 0.75rem; border: 1px solid #e2e8f0; font-weight: 500;">{{ $member->name }}</td>
                         <td style="padding: 0.75rem; border: 1px solid #e2e8f0; text-align: right;">
                             {{ number_format($member->saldo_awal, 0, ',', '.') }}</td>

@@ -13,12 +13,21 @@ class Member extends Model
         'occupation',
         'address',
         'join_date',
+        'member_no',
     ];
 
     protected $casts = [
         'date_of_birth' => 'date',
         'join_date' => 'date',
     ];
+
+    protected static function booted()
+    {
+        static::created(function ($member) {
+            $member->member_no = sprintf('%03d/IKAP/%s/%s', $member->id, $member->join_date->format('m'), $member->join_date->format('Y'));
+            $member->save();
+        });
+    }
 
     public function getAgeAttribute()
     {
