@@ -7,74 +7,19 @@
         <p>Pantau arus kas masuk, keluar, dan posisi keuangan koperasi secara real-time.</p>
     </div>
 
-    {{-- Filter Form --}}
-    <div style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); padding: 2rem; border-radius: 1.5rem; box-shadow: var(--shadow); margin-top: 2rem;">
-        <form method="GET" action="{{ route('reports.index') }}" style="display: flex; gap: 1rem; align-items: end; flex-wrap: wrap;">
-            <div style="flex: 1; min-width: 200px;">
-                <label style="display: block; margin-bottom: 0.5rem; color: white; font-weight: 600; font-size: 0.875rem;">Kode Transaksi</label>
-                <select name="code" style="width: 100%; padding: 0.75rem; border-radius: 0.75rem; border: none; font-size: 0.875rem; background: white; cursor: pointer;">
-                    <option value="">Semua Kode</option>
-                    <option value="001" {{ request('code') == '001' ? 'selected' : '' }}>001 - Simpanan Wajib</option>
-                    <option value="002" {{ request('code') == '002' ? 'selected' : '' }}>002 - Simpanan Pokok</option>
-                    <option value="003" {{ request('code') == '003' ? 'selected' : '' }}>003 - Simpanan Operasional</option>
-                    <option value="004" {{ request('code') == '004' ? 'selected' : '' }}>004 - Pembiayaan</option>
-                </select>
-            </div>
-
-            <div style="flex: 1; min-width: 200px;">
-                <label style="display: block; margin-bottom: 0.5rem; color: white; font-weight: 600; font-size: 0.875rem;">Tahun</label>
-                <select name="year" style="width: 100%; padding: 0.75rem; border-radius: 0.75rem; border: none; font-size: 0.875rem; background: white; cursor: pointer;">
-                    <option value="">Semua Tahun</option>
-                    @foreach($availableYears as $year)
-                        <option value="{{ $year }}" {{ request('year') == $year ? 'selected' : '' }}>{{ $year }}</option>
-                    @endforeach
-                </select>
-            </div>
-
-            <div style="display: flex; gap: 0.5rem;">
-                <button type="submit" style="padding: 0.75rem 1.5rem; background: white; color: #667eea; border: none; border-radius: 0.75rem; font-weight: 700; cursor: pointer; transition: all 0.3s; box-shadow: 0 4px 6px rgba(0,0,0,0.1);">
-                    🔍 Tampilkan
-                </button>
-                <a href="{{ route('reports.index') }}" style="padding: 0.75rem 1.5rem; background: rgba(255,255,255,0.2); color: white; border: 2px solid white; border-radius: 0.75rem; font-weight: 700; cursor: pointer; transition: all 0.3s; text-decoration: none; display: inline-block;">
-                    🔄 Reset
-                </a>
-            </div>
-        </form>
-    </div>
-
     {{-- 1. Buku Kas Report --}}
     <div style="margin-top: 2.5rem;">
         <!-- Tabel Buku Kas -->
         <div style="background: white; padding: 2rem; border-radius: 1.5rem; box-shadow: var(--shadow); margin-bottom: 2rem; overflow-x: auto;">
             <div style="text-align: center; margin-bottom: 2rem;">
-                <h2 style="font-size: 1.5rem; font-weight: 700; text-transform: uppercase;">
-                    Buku Kas 
-                    @if($codeFilter == '001')
-                        - Simpanan Wajib
-                    @elseif($codeFilter == '002')
-                        - Simpanan Pokok
-                    @elseif($codeFilter == '003')
-                        - Simpanan Operasional
-                    @elseif($codeFilter == '004')
-                        - Pembiayaan
-                    @else
-                        Uang Masuk dan Uang Keluar
-                    @endif
-                </h2>
-                <h3 style="font-size: 1.125rem; font-weight: 600; color: #64748b;">
-                    @if($yearFilter)
-                        Tahun {{ $yearFilter }}
-                    @else
-                        Semua Tahun
-                    @endif
-                </h3>
+                <h2 style="font-size: 1.5rem; font-weight: 700; text-transform: uppercase;">Buku Kas Uang Masuk dan Uang Keluar</h2>
+                <h3 style="font-size: 1.125rem; font-weight: 600; color: #64748b;">Tahun {{ date('Y') }}</h3>
             </div>
             
             <table style="width: 100%; border-collapse: collapse; font-size: 0.875rem;">
                 <thead>
                     <tr style="background: #f8fafc; border: 1px solid #e2e8f0;">
                         <th rowspan="2" style="padding: 1rem; border: 1px solid #e2e8f0; text-align: center; width: 50px;">NO</th>
-                        <th rowspan="2" style="padding: 1rem; border: 1px solid #e2e8f0; text-align: center; width: 80px;">KODE</th>
                         <th rowspan="2" style="padding: 1rem; border: 1px solid #e2e8f0; text-align: center; width: 120px;">TANGGAL</th>
                         <th rowspan="2" style="padding: 1rem; border: 1px solid #e2e8f0; text-align: center;">URAIAN</th>
                         <th colspan="2" style="padding: 0.75rem; border: 1px solid #e2e8f0; text-align: center;">UANG</th>
@@ -90,9 +35,6 @@
                     @forelse($reportData as $row)
                         <tr style="border: 1px solid #e2e8f0;">
                             <td style="padding: 0.75rem; border: 1px solid #e2e8f0; text-align: center;">{{ $no++ }}</td>
-                            <td style="padding: 0.75rem; border: 1px solid #e2e8f0; text-align: center; font-family: monospace; font-weight: 700; color: #667eea;">
-                                {{ $row['code'] ?? '-' }}
-                            </td>
                             <td style="padding: 0.75rem; border: 1px solid #e2e8f0; text-align: center;">{{ \Carbon\Carbon::parse($row['date'])->format('d/m/Y') }}</td>
                             <td style="padding: 0.75rem; border: 1px solid #e2e8f0;">{{ $row['description'] }}</td>
                             <td style="padding: 0.75rem; border: 1px solid #e2e8f0; text-align: right; color: #166534;">
@@ -107,7 +49,7 @@
                         </tr>
                     @empty
                         <tr>
-                            <td colspan="7" style="padding: 2rem; text-align: center; color: #64748b; border: 1px solid #e2e8f0;">Belum ada transaksi yang tercatat.</td>
+                            <td colspan="6" style="padding: 2rem; text-align: center; color: #64748b; border: 1px solid #e2e8f0;">Belum ada transaksi yang tercatat.</td>
                         </tr>
                     @endforelse
                 </tbody>
