@@ -18,58 +18,34 @@ Route::get('/', function () {
     $totalOperasional = \App\Models\Saving::where('type', 'operasional')->sum('amount');
     $totalFinancing = \App\Models\Financing::where('status', 'Disetujui')->sum('amount');
 
-    // Fetch latest transactions (7 days)
-    $sevenDaysAgo = now()->subDays(7);
-
-    $latestSavings = \App\Models\Saving::with('member')
-        ->where('transaction_date', '>=', $sevenDaysAgo)
+    // Fetch members with summary
+    $members = \App\Models\Member::with(['savings', 'financings.installments'])
         ->latest()
+        ->limit(10)
         ->get()
-        ->map(function ($item) {
-            $typeLabels = [
-                'pokok' => 'Simpanan Pokok',
-                'wajib' => 'Simpanan Wajib',
-                'operasional' => 'Dana Operasional',
-            ];
-            $item->transaction_type = $typeLabels[$item->type] ?? 'Simpanan';
-            $item->display_amount = $item->amount;
-            $item->display_member = $item->member ? ($item->member->name . ' - ' . $item->member->member_no) : 'N/A';
-            $item->display_status = 'Selesai';
-            $item->display_date = \Carbon\Carbon::parse($item->transaction_date)->format('d/m/Y');
-            $item->status_color = '#dcfce7';
-            $item->text_color = '#166534';
-            $item->sort_date = $item->transaction_date;
-            return $item;
+        ->map(function ($member) {
+            $member->summary_pokok = $member->savings->where('type', 'pokok')->sum('amount');
+            $member->summary_wajib = $member->savings->where('type', 'wajib')->sum('amount');
+
+            // Filter functionality for detailed display
+            $activeFinancings = $member->financings->where('status', 'Disetujui');
+            $member->summary_financing = $activeFinancings->sum('amount');
+
+            $member->financing_details = $activeFinancings->map(function ($financing) {
+                $paidInstallments = $financing->installments->where('is_paid', true)->count();
+                $totalInstallments = $financing->duration; // Assuming duration is in months/installments
+    
+                return [
+                    'amount' => $financing->amount,
+                    'progress' => "{$paidInstallments}/{$totalInstallments}",
+                    'status' => $financing->status, // Or derive status like 'Lunas' if paid >= total
+                ];
+            });
+
+            return $member;
         });
 
-    $latestFinancings = \App\Models\Financing::with('member')
-        ->where('date', '>=', $sevenDaysAgo)
-        ->latest()
-        ->get()
-        ->map(function ($item) {
-            $item->transaction_type = 'Pembiayaan';
-            $item->display_amount = $item->amount;
-            $item->display_member = $item->member ? ($item->member->name . ' - ' . $item->member->member_no) : 'N/A';
-            $item->display_status = $item->status;
-            $item->display_date = \Carbon\Carbon::parse($item->date)->format('d/m/Y');
-
-            $colors = [
-                'Pending' => ['bg' => '#fef9c3', 'text' => '#854d0e'],
-                'Disetujui' => ['bg' => '#dcfce7', 'text' => '#166534'],
-                'Ditolak' => ['bg' => '#fee2e2', 'text' => '#991b1b'],
-                'Lunas' => ['bg' => '#dcfce7', 'text' => '#166534'],
-            ];
-
-            $statusColors = $colors[$item->status] ?? ['bg' => '#f1f5f9', 'text' => '#475569'];
-            $item->status_color = $statusColors['bg'];
-            $item->text_color = $statusColors['text'];
-            $item->sort_date = $item->date;
-            return $item;
-        });
-
-    $latestTransactions = $latestSavings->concat($latestFinancings)->sortByDesc('sort_date');
-
-    return view('home', compact('totalMembers', 'newMembers', 'totalPokok', 'totalWajib', 'totalOperasional', 'totalFinancing', 'latestTransactions'));
+    return view('home', compact('totalMembers', 'newMembers', 'totalPokok', 'totalWajib', 'totalOperasional', 'totalFinancing', 'members'));
 });
 
 Route::resource('members', MemberController::class);
