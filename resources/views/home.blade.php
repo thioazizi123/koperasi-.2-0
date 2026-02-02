@@ -4,7 +4,7 @@
 
 @section('content')
     <div class="welcome-section">
-        <h1>Dashboard Koperasi</h1>
+        <h1>Dashboard Koperasi IKAP</h1>
         <p>Selamat datang di sistem manajemen koperasi modern. Kelola data anggota, transaksi simpanan, dan pembiayaan
             dengan mudah dan transparan.</p>
 
@@ -52,7 +52,8 @@
                 <tbody>
                     @forelse($latestTransactions as $transaction)
                         <tr style="border-bottom: 1px solid #f1f5f9;">
-                            <td style="padding: 1rem 0; color: #64748b; font-size: 0.875rem;">{{ $transaction->display_date }}</td>
+                            <td style="padding: 1rem 0; color: #64748b; font-size: 0.875rem;">{{ $transaction->display_date }}
+                            </td>
                             <td style="padding: 1rem 0;">{{ $transaction->display_member }}</td>
                             <td style="padding: 1rem 0;">{{ $transaction->transaction_type }}</td>
                             <td style="padding: 1rem 0;">Rp {{ number_format($transaction->display_amount, 0, ',', '.') }}</td>

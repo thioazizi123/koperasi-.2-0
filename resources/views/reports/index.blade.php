@@ -1,14 +1,121 @@
 @extends('layouts.app')
 @section('title', 'Laporan Keuangan')
 
+@push('styles')
+<style>
+    @media print {
+        /* Hide elements not needed for print */
+        .welcome-section,
+        nav,
+        .navbar,
+        .filter-section,
+        .no-print,
+        .sidebar,
+        .top-bar {
+            display: none !important;
+        }
+        
+        /* Reset body for print */
+        body {
+            background: white !important;
+            padding: 0 !important;
+            margin: 0 !important;
+            overflow: visible !important;
+        }
+
+        /* Reset main content margin */
+        .main-content {
+            margin-left: 0 !important;
+            padding: 0 !important;
+            width: 100% !important;
+        }
+        
+        /* Optimize table for print */
+        .report-table {
+            page-break-inside: avoid;
+        }
+        
+        table {
+            width: 100% !important;
+            border-collapse: collapse !important;
+            font-size: 10pt !important;
+        }
+        
+        th, td {
+            padding: 0.5rem !important;
+            border: 1px solid #000 !important;
+        }
+        
+        /* Remove shadows and backgrounds */
+        .card, div {
+            box-shadow: none !important;
+            border-radius: 0 !important;
+            background: white !important;
+        }
+        
+        /* Print header */
+        .print-header {
+            text-align: center;
+            margin-bottom: 1rem;
+        }
+        
+        /* Page breaks */
+        .page-break {
+            page-break-before: always;
+        }
+    }
+
+    /* Selective Printing Classes */
+    @media print {
+        body.print-buku-kas .matrix-report-section,
+        body.print-buku-kas .page-break {
+            display: none !important;
+        }
+
+        body.print-matrix .buku-kas-section {
+            display: none !important;
+        }
+        
+        body.print-matrix .page-break {
+            display: none !important; /* Hide page break when printing only matrix */
+        }
+    }
+    
+    .print-button {
+        position: fixed;
+        bottom: 2rem;
+        right: 2rem;
+        padding: 1rem 2rem;
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        color: white;
+        border: none;
+        border-radius: 50px;
+        font-weight: 700;
+        cursor: pointer;
+        box-shadow: 0 8px 16px rgba(102, 126, 234, 0.4);
+        transition: all 0.3s;
+        z-index: 1000;
+    }
+    
+    .print-button:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 12px 20px rgba(102, 126, 234, 0.6);
+    }
+</style>
+@endpush
+
 @section('content')
     <div class="welcome-section">
         <h1>Laporan Keuangan</h1>
         <p>Pantau arus kas masuk, keluar, dan posisi keuangan koperasi secara real-time.</p>
     </div>
 
+
+
+
+
     {{-- Filter Form --}}
-    <div style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); padding: 2rem; border-radius: 1.5rem; box-shadow: var(--shadow); margin-top: 2rem;">
+    <div class="filter-section no-print" style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); padding: 2rem; border-radius: 1.5rem; box-shadow: var(--shadow); margin-top: 2rem;">
         <form method="GET" action="{{ route('reports.index') }}" style="display: flex; gap: 1rem; align-items: end; flex-wrap: wrap;">
             <div style="flex: 1; min-width: 200px;">
                 <label style="display: block; margin-bottom: 0.5rem; color: white; font-weight: 600; font-size: 0.875rem;">Kode Transaksi</label>
@@ -18,6 +125,7 @@
                     <option value="002" {{ request('code') == '002' ? 'selected' : '' }}>002 - Simpanan Pokok</option>
                     <option value="003" {{ request('code') == '003' ? 'selected' : '' }}>003 - Simpanan Operasional</option>
                     <option value="004" {{ request('code') == '004' ? 'selected' : '' }}>004 - Pembiayaan</option>
+                    <option value="005" {{ request('code') == '005' ? 'selected' : '' }}>005 - Angsuran</option>
                 </select>
             </div>
 
@@ -43,9 +151,9 @@
     </div>
 
     {{-- 1. Buku Kas Report --}}
-    <div style="margin-top: 2.5rem;">
+    <div class="buku-kas-section" style="margin-top: 2.5rem;">
         <!-- Tabel Buku Kas -->
-        <div style="background: white; padding: 2rem; border-radius: 1.5rem; box-shadow: var(--shadow); margin-bottom: 2rem; overflow-x: auto;">
+        <div class="report-table" style="background: white; padding: 2rem; border-radius: 1.5rem; box-shadow: var(--shadow); margin-bottom: 2rem; overflow-x: auto;">
             <div style="text-align: center; margin-bottom: 2rem;">
                 <h2 style="font-size: 1.5rem; font-weight: 700; text-transform: uppercase;">
                     Buku Kas 
@@ -57,6 +165,8 @@
                         - Simpanan Operasional
                     @elseif($codeFilter == '004')
                         - Pembiayaan
+                    @elseif($codeFilter == '005')
+                        - Angsuran
                     @else
                         Uang Masuk dan Uang Keluar
                     @endif
@@ -113,10 +223,16 @@
                 </tbody>
             </table>
         </div>
+        <div class="no-print" style="text-align: right; margin-top: 1rem;">
+            <button onclick="printSection('buku-kas')" class="print-button" style="position: static; padding: 0.75rem 1.5rem; border-radius: 0.75rem; box-shadow: 0 4px 6px rgba(0,0,0,0.1);">
+                📖 Print Buku Kas
+            </button>
+        </div>
     </div>
 
     {{-- 2. Matrix Report --}}
-    <div class="card"
+    <div class="page-break"></div>
+    <div class="report-table card matrix-report-section"
         style="padding: 1.5rem; overflow-x: auto; background: white; border-radius: 1rem; box-shadow: var(--shadow); margin-top: 3rem;">
 
         <h2 style="text-align:center; font-weight:700; margin-bottom:0.5rem; color: #1e293b;">DAFTAR SIMPANAN ANGGOTA
@@ -177,5 +293,34 @@
                 @endforelse
             </tbody>
         </table>
+        <div class="no-print" style="text-align: right; margin-top: 1rem;">
+            <button onclick="printSection('matrix')" class="print-button" style="position: static; padding: 0.75rem 1.5rem; border-radius: 0.75rem; box-shadow: 0 4px 6px rgba(0,0,0,0.1); background: linear-gradient(135deg, #10b981 0%, #059669 100%);">
+                📊 Print Daftar Simpanan
+            </button>
+        </div>
     </div>
+@endsection
+
+@section('scripts')
+<script>
+    function printSection(section) {
+        // Remove existing print classes
+        document.body.classList.remove('print-buku-kas', 'print-matrix');
+        
+        // Add specific class based on selection
+        if (section === 'buku-kas') {
+            document.body.classList.add('print-buku-kas');
+        } else if (section === 'matrix') {
+            document.body.classList.add('print-matrix');
+        }
+        
+        // Print
+        window.print();
+        
+        // Optional: Remove classes after print to restore view (timeout to allow print dialog to capture state)
+        setTimeout(() => {
+            document.body.classList.remove('print-buku-kas', 'print-matrix');
+        }, 1000);
+    }
+</script>
 @endsection

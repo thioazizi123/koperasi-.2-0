@@ -4,7 +4,7 @@
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>Sistem Koperasi - @yield('title')</title>
+    <title>Koperasi IKAP - @yield('title')</title>
 
     <!-- Google Fonts -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -18,12 +18,81 @@
     <link rel="stylesheet" href="{{ asset('css/app-style.css') }}">
 
     @yield('styles')
+
+    <style>
+        @media print {
+            @page {
+                size: landscape; /* Force landscape for better table fit */
+                margin: 1cm;
+            }
+
+            /* 1. HIDE EVERYTHING by default */
+            body * {
+                visibility: hidden;
+            }
+
+            /* 2. SHOW only specific printable areas and their children */
+            .print-buku-kas .buku-kas-section,
+            .print-buku-kas .buku-kas-section *,
+            .print-matrix .matrix-report-section,
+            .print-matrix .matrix-report-section * {
+                visibility: visible;
+            }
+
+            /* 3. POSITION the printable area to top-left */
+            .print-buku-kas .buku-kas-section,
+            .print-matrix .matrix-report-section {
+                position: absolute;
+                left: 0;
+                top: 0;
+                width: 100%;
+                margin: 0;
+                padding: 0;
+                background: white;
+                
+                /* Remove overflow to prevent scrollbars */
+                overflow: visible !important;
+            }
+
+            /* Fix Table Width & Font Size */
+            table {
+                width: 100% !important;
+                font-size: 9pt !important; /* Smaller font */
+                border-collapse: collapse !important;
+            }
+            
+            th, td {
+                padding: 4px !important; /* Compact padding */
+                border: 1px solid #000 !important;
+                word-wrap: break-word;
+            }
+
+            /* 4. Hide page furniture explictly */
+            .sidebar, .top-bar, .welcome-section, .filter-section, .no-print, .print-button {
+                display: none !important;
+            }
+            
+            /* 5. Reset Body */
+            body {
+                background: white;
+                margin: 0;
+                padding: 0;
+                /* Remove hidden overflow that might clip content */
+                overflow: visible !important; 
+            }
+            
+            /* Hide scrollbars */
+            ::-webkit-scrollbar {
+                display: none;
+            }
+        }
+    </style>
 </head>
 
 <body>
-    <aside class="sidebar">
+    <aside class="sidebar no-print">
         <div class="sidebar-header">
-            <h2>Koperasi Syariah</h2>
+            <h2>Koperasi IKAP</h2>
         </div>
 
         <nav class="sidebar-nav">
@@ -42,29 +111,34 @@
                     </a>
                 </li>
                 <li class="menu-item {{ request()->is('simpanan*') ? 'open' : '' }}">
-                    <div class="menu-link {{ request()->is('simpanan*') ? 'active' : '' }}" onclick="toggleSubmenu(this)">
+                    <div class="menu-link {{ request()->is('simpanan*') ? 'active' : '' }}"
+                        onclick="toggleSubmenu(this)">
                         <span class="menu-icon"><i class="fas fa-wallet"></i></span>
                         <span class="menu-text">Simpanan</span>
                         <span class="chevron-icon"><i class="fas fa-chevron-down"></i></span>
                     </div>
                     <ul class="submenu-list">
                         <li>
-                            <a href="{{ route('simpanan.pokok') }}" class="submenu-link {{ request()->routeIs('simpanan.pokok') ? 'active' : '' }}">
+                            <a href="{{ route('simpanan.pokok') }}"
+                                class="submenu-link {{ request()->routeIs('simpanan.pokok') ? 'active' : '' }}">
                                 Simpanan Pokok
                             </a>
                         </li>
                         <li>
-                            <a href="{{ route('simpanan.wajib') }}" class="submenu-link {{ request()->routeIs('simpanan.wajib') ? 'active' : '' }}">
+                            <a href="{{ route('simpanan.wajib') }}"
+                                class="submenu-link {{ request()->routeIs('simpanan.wajib') ? 'active' : '' }}">
                                 Simpanan Wajib
                             </a>
                         </li>
                         <li>
-                            <a href="{{ route('simpanan.operasional') }}" class="submenu-link {{ request()->routeIs('simpanan.operasional') ? 'active' : '' }}">
+                            <a href="{{ route('simpanan.operasional') }}"
+                                class="submenu-link {{ request()->routeIs('simpanan.operasional') ? 'active' : '' }}">
                                 Dana Operasional
                             </a>
                         </li>
                         <li>
-                            <a href="{{ route('simpanan.penarikan') }}" class="submenu-link {{ request()->routeIs('simpanan.penarikan') ? 'active' : '' }}">
+                            <a href="{{ route('simpanan.penarikan') }}"
+                                class="submenu-link {{ request()->routeIs('simpanan.penarikan') ? 'active' : '' }}">
                                 Penarikan
                             </a>
                         </li>
@@ -89,7 +163,7 @@
     </aside>
 
     <main class="main-content">
-        <header class="top-bar">
+        <header class="top-bar no-print">
             <div class="search-bar">
                 <!-- Can add search here -->
             </div>

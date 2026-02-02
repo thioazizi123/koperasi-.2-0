@@ -67,8 +67,8 @@ class ReportController extends Controller
             $transactions = $transactions->concat($financings);
         }
 
-        // Get Installments Paid (Inflows) - show when no filter or code 004
-        if (!$codeFilter || $codeFilter == '004') {
+        // Get Installments Paid (Inflows) - show when no filter or code 005
+        if (!$codeFilter || $codeFilter == '005') {
             $installmentsQuery = \App\Models\Installment::with('financing.member')->where('is_paid', true);
 
             // Apply year filter
@@ -79,7 +79,7 @@ class ReportController extends Controller
             $installments = $installmentsQuery->get()->map(function ($i) {
                 return [
                     'date' => $i->paid_date,
-                    'code' => '004', // Angsuran part of Pembiayaan (code 004)
+                    'code' => '005', // Angsuran code 005
                     'description' => 'Angsuran ke-' . $i->installment_number . ' (' . ($i->financing->type ?? 'N/A') . ') - ' . ($i->financing->member ? ($i->financing->member->name . ' (' . $i->financing->member->member_no . ')') : 'N/A'),
                     'in' => $i->amount,
                     'out' => 0,
