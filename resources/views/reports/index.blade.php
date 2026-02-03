@@ -119,7 +119,7 @@
         <form method="GET" action="{{ route('reports.index') }}" style="display: flex; gap: 1rem; align-items: end; flex-wrap: wrap;">
             <div style="flex: 1; min-width: 200px;">
                 <label style="display: block; margin-bottom: 0.5rem; color: white; font-weight: 600; font-size: 0.875rem;">Kode Transaksi</label>
-                <select name="code" style="width: 100%; padding: 0.75rem; border-radius: 0.75rem; border: none; font-size: 0.875rem; background: white; cursor: pointer;">
+                <select name="code" onchange="this.form.submit()" style="width: 100%; padding: 0.75rem; border-radius: 0.75rem; border: none; font-size: 0.875rem; background: white; cursor: pointer;">
                     <option value="">Semua Kode</option>
                     <option value="001" {{ request('code') == '001' ? 'selected' : '' }}>001 - Simpanan Wajib</option>
                     <option value="002" {{ request('code') == '002' ? 'selected' : '' }}>002 - Simpanan Pokok</option>
@@ -131,21 +131,12 @@
 
             <div style="flex: 1; min-width: 200px;">
                 <label style="display: block; margin-bottom: 0.5rem; color: white; font-weight: 600; font-size: 0.875rem;">Tahun</label>
-                <select name="year" style="width: 100%; padding: 0.75rem; border-radius: 0.75rem; border: none; font-size: 0.875rem; background: white; cursor: pointer;">
+                <select name="year" onchange="this.form.submit()" style="width: 100%; padding: 0.75rem; border-radius: 0.75rem; border: none; font-size: 0.875rem; background: white; cursor: pointer;">
                     <option value="">Semua Tahun</option>
                     @foreach($availableYears as $year)
                         <option value="{{ $year }}" {{ request('year') == $year ? 'selected' : '' }}>{{ $year }}</option>
                     @endforeach
                 </select>
-            </div>
-
-            <div style="display: flex; gap: 0.5rem;">
-                <button type="submit" style="padding: 0.75rem 1.5rem; background: white; color: #667eea; border: none; border-radius: 0.75rem; font-weight: 700; cursor: pointer; transition: all 0.3s; box-shadow: 0 4px 6px rgba(0,0,0,0.1);">
-                    🔍 Tampilkan
-                </button>
-                <a href="{{ route('reports.index') }}" style="padding: 0.75rem 1.5rem; background: rgba(255,255,255,0.2); color: white; border: 2px solid white; border-radius: 0.75rem; font-weight: 700; cursor: pointer; transition: all 0.3s; text-decoration: none; display: inline-block;">
-                    🔄 Reset
-                </a>
             </div>
         </form>
     </div>
@@ -225,7 +216,7 @@
         </div>
         <div class="no-print" style="text-align: right; margin-top: 1rem;">
             <button onclick="printSection('buku-kas')" class="print-button" style="position: static; padding: 0.75rem 1.5rem; border-radius: 0.75rem; box-shadow: 0 4px 6px rgba(0,0,0,0.1);">
-                📖 Print Buku Kas
+                Print
             </button>
         </div>
     </div>
@@ -294,8 +285,8 @@
             </tbody>
         </table>
         <div class="no-print" style="text-align: right; margin-top: 1rem;">
-            <button onclick="printSection('matrix')" class="print-button" style="position: static; padding: 0.75rem 1.5rem; border-radius: 0.75rem; box-shadow: 0 4px 6px rgba(0,0,0,0.1); background: linear-gradient(135deg, #10b981 0%, #059669 100%);">
-                📊 Print Daftar Simpanan
+            <button onclick="printSection('matrix')" class="print-button" style="position: static; padding: 0.75rem 1.5rem; border-radius: 0.75rem; box-shadow: 0 4px 6px rgba(0,0,0,0.1);">
+                Print
             </button>
         </div>
     </div>

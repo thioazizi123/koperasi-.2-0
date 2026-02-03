@@ -24,7 +24,7 @@ class Member extends Model
     protected static function booted()
     {
         static::created(function ($member) {
-            $member->member_no = sprintf('%03d/IKAP/%s/%s', $member->id, $member->join_date->format('m'), $member->join_date->format('Y'));
+            $member->member_no = sprintf('%03d/IKAB/%s/%s', $member->id, $member->join_date->format('m'), $member->join_date->format('Y'));
             $member->save();
         });
     }
