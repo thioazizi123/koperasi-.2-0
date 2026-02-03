@@ -6,7 +6,7 @@ use Illuminate\Http\Request;
 
 class ReportController extends Controller
 {
-    public function index(Request $request)
+    public function cashBook(Request $request)
     {
         // Get filter parameters
         $codeFilter = $request->get('code'); // 001, 002, 003, 004, or null
@@ -126,8 +126,12 @@ class ReportController extends Controller
             $availableYears = collect([date('Y')]);
         }
 
+        return view('reports.cash_book', compact('reportData', 'availableYears', 'codeFilter', 'yearFilter'));
+    }
 
-        // --- 3. Matrix Report Data (Daftar Simpanan Anggota) - Unfiltered ---
+    public function members(Request $request)
+    {
+        // --- Matrix Report Data (Daftar Simpanan Anggota) ---
         $allSavings = \App\Models\Saving::all();
 
         // Get distinct years from savings
@@ -145,6 +149,7 @@ class ReportController extends Controller
             $row = [
                 'name' => $member->name,
                 'member_no' => $member->member_no,
+                'nik' => $member->nik,
                 'pokok' => $member->savings->where('type', 'pokok')->sum('amount'),
                 'years' => [],
                 'total_all' => 0
@@ -174,8 +179,9 @@ class ReportController extends Controller
             $matrix[] = $row;
         }
 
-        return view('reports.index', compact('reportData', 'matrix', 'years', 'availableYears', 'codeFilter', 'yearFilter'));
+        return view('reports.members', compact('matrix', 'years'));
     }
+
 
     /**
      * Get code from savings/financing type

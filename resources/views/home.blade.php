@@ -47,6 +47,7 @@
                                 <span style="color: #64748b; font-weight: normal; margin-right: 0.5rem;">#{{ $member->member_no }}</span>
                                 {{ $member->name }}
                             </h3>
+                            <div style="font-size: 0.8rem; color: #64748b; margin-top: 0.25rem;">NIK: {{ $member->nik ?? '-' }}</div>
                             <span style="font-size: 0.8rem; color: #64748b;">Bergabung:
                                 {{ $member->join_date->format('d/m/Y') }}</span>
                         </div>
