@@ -27,6 +27,7 @@ class MemberController extends Controller
     public function store(Request $request)
     {
         $validated = $request->validate([
+            'nik' => 'required|string|size:16|unique:members',
             'name' => 'required|string|max:255',
             'date_of_birth' => 'required|date',
             'gender' => 'required|in:Laki-laki,Perempuan',
@@ -62,6 +63,7 @@ class MemberController extends Controller
     public function update(Request $request, Member $member)
     {
         $validated = $request->validate([
+            'nik' => 'required|string|size:16|unique:members,nik,' . $member->id,
             'name' => 'required|string|max:255',
             'date_of_birth' => 'required|date',
             'gender' => 'required|in:Laki-laki,Perempuan',

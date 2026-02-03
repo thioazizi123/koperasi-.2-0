@@ -8,6 +8,7 @@ class Member extends Model
 {
     protected $fillable = [
         'name',
+        'nik',
         'date_of_birth',
         'gender',
         'occupation',

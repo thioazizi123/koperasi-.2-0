@@ -145,6 +145,7 @@ class ReportController extends Controller
             $row = [
                 'name' => $member->name,
                 'member_no' => $member->member_no,
+                'nik' => $member->nik,
                 'pokok' => $member->savings->where('type', 'pokok')->sum('amount'),
                 'years' => [],
                 'total_all' => 0

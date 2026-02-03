@@ -173,6 +173,7 @@
             <thead>
                 <tr>
                     <th>ID</th>
+                    <th>NIK</th>
                     <th>Nama Lengkap</th>
                     <th>Umur</th>
                     <th>Jenis Kelamin</th>
@@ -188,6 +189,7 @@
                         <td style="font-family: monospace; font-weight: 600; color: #64748b;">
                             {{ $member->member_no ?? '-' }}
                         </td>
+                        <td style="font-family: monospace;">{{ $member->nik ?? '-' }}</td>
                         <td>
                             <div style="font-weight: 600; color: #1e293b;">{{ $member->name }}</div>
                         </td>
@@ -242,6 +244,11 @@
             <form id="memberForm" action="{{ route('members.store') }}" method="POST">
                 @csrf
                 <div id="methodField"></div>
+
+                <div class="form-group">
+                    <label class="form-label">NIK</label>
+                    <input type="text" id="nik" name="nik" class="form-control" maxlength="16" required>
+                </div>
 
                 <div class="form-group">
                     <label class="form-label">Nama Lengkap</label>
@@ -306,6 +313,8 @@
             document.getElementById('modalTitle').innerText = 'Edit Data Anggota';
             document.getElementById('memberForm').action = `/members/${member.id}`;
             document.getElementById('methodField').innerHTML = '<input type="hidden" name="_method" value="PUT">';
+
+            document.getElementById('nik').value = member.nik;
 
             document.getElementById('name').value = member.name;
             // Format date string to YYYY-MM-DD for input type=date
