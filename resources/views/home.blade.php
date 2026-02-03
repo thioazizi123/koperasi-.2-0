@@ -43,7 +43,10 @@
                 @forelse($members as $member)
                     <div style="border: 1px solid #e2e8f0; border-radius: 0.75rem; padding: 1.25rem;">
                         <div style="margin-bottom: 1rem; border-bottom: 1px solid #f1f5f9; padding-bottom: 0.75rem;">
-                            <h3 style="font-size: 1rem; font-weight: 600; margin: 0; color: #1e293b;">{{ $member->name }}</h3>
+                            <h3 style="font-size: 1rem; font-weight: 600; margin: 0; color: #1e293b;">
+                                <span style="color: #64748b; font-weight: normal; margin-right: 0.5rem;">#{{ $member->member_no }}</span>
+                                {{ $member->name }}
+                            </h3>
                             <span style="font-size: 0.8rem; color: #64748b;">Bergabung:
                                 {{ $member->join_date->format('d/m/Y') }}</span>
                         </div>
