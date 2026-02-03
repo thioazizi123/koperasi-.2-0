@@ -186,8 +186,12 @@
             </table>
         </div>
         <div class="no-print" style="text-align: right; margin-top: 1rem;">
+<<<<<<< HEAD
             <button onclick="window.print()" class="print-button"
                 style="position: static; padding: 0.75rem 1.5rem; border-radius: 0.75rem; box-shadow: 0 4px 6px rgba(0,0,0,0.1);">
+=======
+            <button onclick="window.print()" class="print-button" style="position: static; padding: 0.75rem 1.5rem; border-radius: 0.75rem; box-shadow: 0 4px 6px rgba(0,0,0,0.1);">
+>>>>>>> 4313f322010693c43f711d7d26a578055bca6953
                 Print Laporan
             </button>
         </div>

@@ -168,6 +168,17 @@
         </div>
     @endif
 
+    @if($errors->any())
+        <div style="background: #fee2e2; color: #991b1b; padding: 1rem; border-radius: 0.75rem; margin-bottom: 2rem;">
+            <ul style="margin: 0; padding-left: 1.5rem;">
+                @foreach($errors->all() as $error)
+                    <li>{{ $error }}</li>
+                @endforeach
+            </ul>
+        </div>
+    @endif
+
+
     <div class="table-container">
         <table class="table">
             <thead>

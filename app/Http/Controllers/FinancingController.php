@@ -114,12 +114,38 @@ class FinancingController extends Controller
     /**
      * Mark an installment as paid
      */
-    public function payInstallment(Installment $installment)
+    public function payInstallment(Request $request, Installment $installment)
     {
         $installment->update([
             'is_paid' => true,
             'paid_date' => now(),
         ]);
+
+        if ($request->ajax() || $request->wantsJson()) {
+            $financing = $installment->financing->fresh(['installments']);
+            $totalCount = $financing->installments->count();
+            $paidCount = $financing->installments->where('is_paid', true)->count();
+            $remainingCount = $totalCount - $paidCount;
+            $remainingAmount = $financing->installments->where('is_paid', false)->sum('amount');
+
+            return response()->json([
+                'success' => true,
+                'message' => 'Angsuran berhasil ditandai lunas.',
+                'data' => [
+                    'installment' => $installment,
+                    'member' => $financing->member,
+                    'paid_date' => \Carbon\Carbon::parse($installment->paid_date)->format('d/m/Y'),
+                    'amount' => number_format((float) $installment->amount, 0, ',', '.'),
+                    'installment_number' => $installment->installment_number,
+                    'summary' => [
+                        'paid_count' => $paidCount,
+                        'total_count' => $totalCount,
+                        'remaining_count' => $remainingCount,
+                        'remaining_amount' => number_format((float) $remainingAmount, 0, ',', '.'),
+                    ]
+                ]
+            ]);
+        }
 
         return redirect()->route('financings.index')->with('success', 'Angsuran berhasil ditandai lunas.');
     }
