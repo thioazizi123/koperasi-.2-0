@@ -1,43 +1,8 @@
 @extends('layouts.app')
 @section('title', 'Buku Kas')
 
-@push('styles')
+@section('styles')
     <style>
-        @media print {
-
-            .welcome-section,
-            .filter-section,
-            .no-print,
-            .sidebar,
-            .top-bar {
-                display: none !important;
-            }
-
-            body {
-                background: white !important;
-                padding: 0 !important;
-                margin: 0 !important;
-            }
-
-            .main-content {
-                margin-left: 0 !important;
-                padding: 0 !important;
-                width: 100% !important;
-            }
-
-            table {
-                width: 100% !important;
-                border-collapse: collapse !important;
-                font-size: 10pt !important;
-            }
-
-            th,
-            td {
-                padding: 0.5rem !important;
-                border: 1px solid #000 !important;
-            }
-        }
-
         .print-button {
             position: fixed;
             bottom: 2rem;
@@ -59,7 +24,7 @@
             box-shadow: 0 12px 20px rgba(102, 126, 234, 0.6);
         }
     </style>
-@endpush
+@endsection
 
 @section('content')
     <div class="welcome-section no-print">
@@ -185,14 +150,9 @@
                 </tbody>
             </table>
         </div>
-        <div class="no-print" style="text-align: right; margin-top: 1rem;">
-<<<<<<< HEAD
-            <button onclick="window.print()" class="print-button"
-                style="position: static; padding: 0.75rem 1.5rem; border-radius: 0.75rem; box-shadow: 0 4px 6px rgba(0,0,0,0.1);">
-=======
-            <button onclick="window.print()" class="print-button" style="position: static; padding: 0.75rem 1.5rem; border-radius: 0.75rem; box-shadow: 0 4px 6px rgba(0,0,0,0.1);">
->>>>>>> 4313f322010693c43f711d7d26a578055bca6953
-                Print Laporan
+        <div class="no-print" style="text-align: right; margin-top: 2rem;">
+            <button onclick="window.print()" class="print-button" style="position: static; padding: 0.8rem 2rem; border-radius: 1rem;">
+                <i class="fas fa-print"></i> Print Laporan
             </button>
         </div>
     </div>

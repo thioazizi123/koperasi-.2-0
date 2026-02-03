@@ -182,6 +182,12 @@ class ReportController extends Controller
         return view('reports.members', compact('matrix', 'years'));
     }
 
+    public function memberList()
+    {
+        $members = \App\Models\Member::orderBy('name')->get();
+        return view('reports.member_list', compact('members'));
+    }
+
 
     /**
      * Get code from savings/financing type

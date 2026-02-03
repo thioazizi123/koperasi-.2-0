@@ -23,71 +23,56 @@
         @media print {
             @page {
                 size: landscape;
-                /* Force landscape for better table fit */
                 margin: 1cm;
             }
 
-            /* 1. HIDE EVERYTHING by default */
-            body * {
-                visibility: hidden;
+            /* Hide UI elements */
+            .sidebar,
+            .top-bar,
+            .no-print,
+            .print-button,
+            .welcome-section,
+            .filter-section {
+                display: none !important;
             }
 
-            /* 2. SHOW only specific printable areas and their children */
-            .print-buku-kas .buku-kas-section,
-            .print-buku-kas .buku-kas-section *,
-            .print-matrix .matrix-report-section,
-            .print-matrix .matrix-report-section * {
-                visibility: visible;
-            }
-
-            /* 3. POSITION the printable area to top-left */
-            .print-buku-kas .buku-kas-section,
-            .print-matrix .matrix-report-section {
-                position: absolute;
-                left: 0;
-                top: 0;
-                width: 100%;
-                margin: 0;
-                padding: 0;
-                background: white;
-
-                /* Remove overflow to prevent scrollbars */
+            /* Reset layout for print */
+            body {
+                background: white !important;
+                margin: 0 !important;
+                padding: 0 !important;
                 overflow: visible !important;
+            }
+
+            .main-content {
+                margin-left: 0 !important;
+                padding: 0 !important;
+                width: 100% !important;
+            }
+
+            .content {
+                padding: 0 !important;
+                margin: 0 !important;
             }
 
             /* Fix Table Width & Font Size */
             table {
                 width: 100% !important;
-                font-size: 9pt !important;
-                /* Smaller font */
+                font-size: 8pt !important;
                 border-collapse: collapse !important;
+                table-layout: auto !important;
             }
 
-            th,
-            td {
-                padding: 4px !important;
-                /* Compact padding */
+            th, td {
+                padding: 4px 2px !important;
                 border: 1px solid #000 !important;
                 word-wrap: break-word;
             }
 
-            /* 4. Hide page furniture explictly */
-            .sidebar,
-            .top-bar,
-            .welcome-section,
-            .filter-section,
-            .no-print,
-            .print-button {
-                display: none !important;
-            }
-
-            /* 5. Reset Body */
-            body {
-                background: white;
-                margin: 0;
-                padding: 0;
-                /* Remove hidden overflow that might clip content */
-                overflow: visible !important;
+            .matrix-report-section {
+                width: 100% !important;
+                padding: 0 !important;
+                margin: 0 !important;
             }
 
             /* Hide scrollbars */
@@ -161,17 +146,22 @@
                     </a>
                 </li>
                 <li class="menu-item {{ request()->is('report*') ? 'open' : '' }}">
-                    <div class="menu-link {{ request()->is('report*') ? 'active' : '' }}"
-                        onclick="toggleSubmenu(this)">
+                    <div class="menu-link {{ request()->is('report*') ? 'active' : '' }}" onclick="toggleSubmenu(this)">
                         <span class="menu-icon"><i class="fas fa-chart-line"></i></span>
                         <span class="menu-text">Report</span>
                         <span class="chevron-icon"><i class="fas fa-chevron-down"></i></span>
                     </div>
                     <ul class="submenu-list">
                         <li>
+                            <a href="{{ route('reports.member_list') }}"
+                                class="submenu-link {{ request()->routeIs('reports.member_list') ? 'active' : '' }}">
+                                Daftar Anggota
+                            </a>
+                        </li>
+                        <li>
                             <a href="{{ route('reports.members') }}"
                                 class="submenu-link {{ request()->routeIs('reports.members') ? 'active' : '' }}">
-                                Daftar Anggota
+                                Daftar Simpanan Anggota Koperasi
                             </a>
                         </li>
                         <li>
@@ -209,7 +199,7 @@
             const menuItem = element.closest('.menu-item');
             menuItem.classList.toggle('open');
             console.log('Toggle clicked', menuItem.classList.contains('open'));
-        }
+    }
     </script>
     @yield('scripts')
 </body>
