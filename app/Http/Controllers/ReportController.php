@@ -189,8 +189,8 @@ class ReportController extends Controller
     private function getCodeFromType($type)
     {
         return match ($type) {
-            'wajib' => '001',
-            'pokok' => '002',
+            'pokok' => '001',
+            'wajib' => '002',
             'operasional' => '003',
             default => null
         };
@@ -202,8 +202,8 @@ class ReportController extends Controller
     private function getTypeFromCode($code)
     {
         return match ($code) {
-            '001' => 'wajib',
-            '002' => 'pokok',
+            '001' => 'pokok',
+            '002' => 'wajib',
             '003' => 'operasional',
             default => null
         };
