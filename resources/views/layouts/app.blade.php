@@ -160,13 +160,29 @@
                         <span class="menu-text">Pembiayaan</span>
                     </a>
                 </li>
-                <li class="menu-item">
-                    <a href="{{ route('reports.index') }}"
-                        class="menu-link {{ request()->routeIs('reports.index') ? 'active' : '' }}">
+                <li class="menu-item {{ request()->is('report*') ? 'open' : '' }}">
+                    <div class="menu-link {{ request()->is('report*') ? 'active' : '' }}"
+                        onclick="toggleSubmenu(this)">
                         <span class="menu-icon"><i class="fas fa-chart-line"></i></span>
                         <span class="menu-text">Report</span>
-                    </a>
+                        <span class="chevron-icon"><i class="fas fa-chevron-down"></i></span>
+                    </div>
+                    <ul class="submenu-list">
+                        <li>
+                            <a href="{{ route('reports.members') }}"
+                                class="submenu-link {{ request()->routeIs('reports.members') ? 'active' : '' }}">
+                                Daftar Anggota
+                            </a>
+                        </li>
+                        <li>
+                            <a href="{{ route('reports.cash_book') }}"
+                                class="submenu-link {{ request()->routeIs('reports.cash_book') ? 'active' : '' }}">
+                                Buku Kas
+                            </a>
+                        </li>
+                    </ul>
                 </li>
+
             </ul>
         </nav>
     </aside>

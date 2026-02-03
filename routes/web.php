@@ -52,7 +52,12 @@ Route::resource('members', MemberController::class);
 Route::resource('financings', FinancingController::class);
 Route::put('/installments/{installment}/pay', [FinancingController::class, 'payInstallment'])->name('installments.pay');
 
-Route::get('/report', [ReportController::class, 'index'])->name('reports.index');
+Route::get('/report', function() {
+    return redirect()->route('reports.cash_book');
+})->name('reports.index');
+Route::get('/report/cash-book', [ReportController::class, 'cashBook'])->name('reports.cash_book');
+Route::get('/report/members', [ReportController::class, 'members'])->name('reports.members');
+
 
 Route::prefix('simpanan')->group(function () {
     Route::get('/wajib', [SavingController::class, 'wajib'])->name('simpanan.wajib');
